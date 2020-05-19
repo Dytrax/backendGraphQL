@@ -127,10 +127,19 @@ const resolvers = {
         },
         uploadImgProduct: async (_, { file }) => {
             //simply returning the file attributes
-            //const { stream, filename, mimetype, encoding } = await file;
-            const fileContent = fs.readFileSync(file);
+            const { filename, createReadStream } = await file;
+            const stream = await createReadStream();
+            const { path } = await saveLocally(stream, filename); 
+            //const newFile = await fs.createReadStream(path);
+            /* const form = new FormData();
+            form.append(
+            'file',
+            newFile
+            ); */
+            /* const { stream, filename, mimetype, encoding } = await file; */
+            /* const fileContent = fs.readFileSync(file); */
             const { Location } = await s3.upload({ 
-                Body: fileContent,               
+                Body: fs.createReadStream(path),               
                 Key: `${uuid()}${extname(filename)}`,  
                 ContentType: mimetype                   
               }).promise();                             
