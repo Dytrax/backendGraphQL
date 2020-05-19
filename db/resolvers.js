@@ -135,10 +135,7 @@ const resolvers = {
                 ContentType: mimetype                   
               }).promise();                             
               console.log({
-                createReadStream,
-                filename,
-                mimetype,
-                encoding,
+                
                 uri: Location,
             })
             /* const { Location } = await s3.upload({ 
