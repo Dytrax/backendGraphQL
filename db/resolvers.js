@@ -79,12 +79,15 @@ const resolvers = {
     },
     Mutation: {
         userNew: async (_, { input }) => {
-            const { email, password } = input;
+            const { email, password,username } = input;
             //User already exist
             const userExist = await User.findOne({ email })
             console.log(userExist)
             if (userExist) {
                 throw new Error('The user is already register')
+            }
+            if(username.length<4){
+                throw new Error('The username is too short')
             }
             //Hash Password
             const salt = await bcryptjs.genSalt(10);
