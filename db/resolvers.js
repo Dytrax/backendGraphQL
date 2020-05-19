@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const { v4: uuid } = require('uuid'); //import UUID/V4 to generate random UUIDs.
 const s3 = require('../config/s3'); // import our configured S3 instance.
 const { extname } = require('path');
+const fs = require('fs')
 require('dotenv').config({ path: 'variables.env' });
 
 const createToken = (user, secret, expiresIn) => {
@@ -126,10 +127,10 @@ const resolvers = {
         },
         uploadImgProduct: async (_, { file }) => {
             //simply returning the file attributes
-            const { stream, filename, mimetype, encoding } = await file;
-            
-            const { Location } = await s3.upload({ // (C)
-                Body: stream(),               
+            //const { stream, filename, mimetype, encoding } = await file;
+            const fileContent = fs.readFileSync(file);
+            const { Location } = await s3.upload({ 
+                Body: fileContent,               
                 Key: `${uuid()}${extname(filename)}`,  
                 ContentType: mimetype                   
               }).promise();                             
@@ -140,10 +141,20 @@ const resolvers = {
                 encoding,
                 uri: Location,
             })
-              return {
+            /* const { Location } = await s3.upload({ 
+                Body: stream(),               
+                Key: `${uuid()}${extname(filename)}`,  
+                ContentType: mimetype                   
+              }).promise();                             
+              console.log({
+                createReadStream,
                 filename,
                 mimetype,
                 encoding,
+                uri: Location,
+            }) */
+              return {
+            
                 uri: Location, // (D)
               }; 
         },
