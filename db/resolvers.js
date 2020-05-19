@@ -126,10 +126,10 @@ const resolvers = {
         },
         uploadImgProduct: async (_, { file }) => {
             //simply returning the file attributes
-            const { createReadStream, filename, mimetype, encoding } = await file;
+            const { stream, filename, mimetype, encoding } = await file;
             
             const { Location } = await s3.upload({ // (C)
-                Body: createReadStream(),               
+                Body: stream(),               
                 Key: `${uuid()}${extname(filename)}`,  
                 ContentType: mimetype                   
               }).promise();                             
