@@ -128,7 +128,7 @@ const resolvers = {
         uploadImgProduct: async (_, { file }) => {
             //simply returning the file attributes
             const { filename, createReadStream } = await file;
-            const stream = await createReadStream();
+            const stream =  createReadStream();
             const { path } = await saveLocally(stream, filename); 
             //const newFile = await fs.createReadStream(path);
             /* const form = new FormData();
